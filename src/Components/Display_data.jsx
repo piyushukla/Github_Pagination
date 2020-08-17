@@ -16,7 +16,7 @@ function Display(props, { loading }) {
       },
     })
       .catch(() => {
-        alert("This Operation fail please try Again");
+        alert("This Operation failed, please try again later");
       })
       .then(() => {
         var index = props.userFollowed.indexOf(login);
@@ -33,7 +33,7 @@ function Display(props, { loading }) {
       },
     })
       .catch(() => {
-        alert("This Operation failed please try Again");
+        alert("This Operation failed, please try again later");
       })
       .then(() => {
         props.add(login);

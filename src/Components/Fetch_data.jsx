@@ -10,9 +10,6 @@ function Fetch() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage, setUsersPerPage] = useState(5);
-  // const [indexOfLastPost, setIndexOfLast] = useState();
-  // const [indexOfFirstPost, setIndexOfFirst] = useState();
-  // const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     fetch("https://api.github.com/repos/facebook/react/forks")
@@ -22,7 +19,7 @@ function Fetch() {
         setLoading(false);
       })
       .catch(() => {
-        alert("This Operation fail please try later");
+        alert("This Operation failed, please try again later");
       });
     if (users.length < 50) {
       setUsersPerPage(5);
@@ -42,7 +39,7 @@ function Fetch() {
       },
     })
       .catch(() => {
-        alert("This Operation failed please try Again !!!!");
+        alert("This Operation failed, please try again later!!");
       })
       .then((resp) => resp.json())
       .then((output) => {
