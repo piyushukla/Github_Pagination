@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+import config from "../config/index.json";
+
 function Display(props, { loading }) {
   if (loading) {
     return <h2>Loading.......</h2>;
@@ -10,14 +12,14 @@ function Display(props, { loading }) {
       headers: {
         "Content-Length": 0,
 
-        Authorization: "token b61798a3f40cfe40a091e923375419f541bdcffc",
+        Authorization: `token ${config.token}`,
       },
     })
       .catch(() => {
         alert("This Operation fail please try Again");
       })
       .then(() => {
-        var index = props.follow.indexOf(login);
+        var index = props.userFollowed.indexOf(login);
         props.remove(index);
       });
   }
@@ -27,7 +29,7 @@ function Display(props, { loading }) {
       headers: {
         "Content-Length": 0,
 
-        Authorization: "token b61798a3f40cfe40a091e923375419f541bdcffc",
+        Authorization: `token ${config.token}`,
       },
     })
       .catch(() => {
@@ -57,14 +59,13 @@ function Display(props, { loading }) {
               className="mr-3"
               style={{ width: "50px", margin: "5px" }}
               src={item.owner.avatar_url}
-              alt="Generic placeholder image"
             />
             <div className="media-body">
               <h6 className="mt-2" style={{ fontSize: "1vw" }}>
                 {item.full_name}
               </h6>
             </div>
-            {props.follow.includes(item.owner.login) ? (
+            {props.userFollowed.includes(item.owner.login) ? (
               <button
                 type="button"
                 className="btn btn-primary"

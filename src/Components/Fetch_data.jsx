@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Display from "./Display_data";
 import Pagination from "./Pagination";
+import config from "../config/index.json";
+import { ThemeProvider } from "react-bootstrap";
 
 function Fetch() {
   const [users, setUser] = useState([]);
-  const [followUser, setFollowUser] = useState([]);
+  const [userFollowed, setUserFollowed] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(5);
+  const [usersPerPage, setUsersPerPage] = useState(5);
+  // const [indexOfLastPost, setIndexOfLast] = useState();
+  // const [indexOfFirstPost, setIndexOfFirst] = useState();
+  // const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     fetch("https://api.github.com/repos/facebook/react/forks")
@@ -20,11 +25,11 @@ function Fetch() {
         alert("This Operation fail please try later");
       });
     if (users.length < 50) {
-      setPostsPerPage(5);
+      setUsersPerPage(5);
     } else if (users.length > 50 && users.length <= 100) {
-      setPostsPerPage(10);
+      setUsersPerPage(10);
     } else {
-      setPostsPerPage(20);
+      setUsersPerPage(20);
     }
   }, []);
 
@@ -33,7 +38,7 @@ function Fetch() {
     fetch("https://api.github.com/users/piyushukla/following", {
       method: "GET",
       headers: {
-        Authorization: "token b61798a3f40cfe40a091e923375419f541bdcffc",
+        Authorization: `token ${config.token}`,
       },
     })
       .catch(() => {
@@ -41,37 +46,35 @@ function Fetch() {
       })
       .then((resp) => resp.json())
       .then((output) => {
+        console.log("output", output);
         output.map((item) => {
           temp.push(item.login);
         });
 
-        setFollowUser([...temp]);
+        setUserFollowed([...temp]);
       });
   }, []);
 
   function unfollow(index) {
-    followUser.splice(index, 1);
-    setFollowUser([...followUser]);
+    userFollowed.splice(index, 1);
+    setUserFollowed([...userFollowed]);
   }
 
   function follow(value) {
-    console.log("val", value);
-    setFollowUser([...followUser, value]);
+    setUserFollowed([...userFollowed, value]);
   }
   //Get current posts
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = users.slice(indexOfFirstPost, indexOfLastPost);
-
+  const indexOfLastPost = currentPage * usersPerPage;
+  const indexOfFirstPost = indexOfLastPost - usersPerPage;
+  const currentUser = users.slice(indexOfFirstPost, indexOfLastPost);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
+  console.log(indexOfFirstPost, indexOfLastPost, currentUser);
   return (
     <div className="container mt-5">
       <Display
-        user={currentPosts}
+        user={currentUser}
         loading={loading}
-        follow={followUser}
+        userFollowed={userFollowed}
         remove={(index) => {
           unfollow(index);
         }}
@@ -80,8 +83,8 @@ function Fetch() {
         }}
       />
       <Pagination
-        postsPerPage={postsPerPage}
-        totalPosts={users.length}
+        usersPerPage={usersPerPage}
+        totalusers={users.length}
         paginate={paginate}
       />
     </div>
